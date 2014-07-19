@@ -4,7 +4,7 @@ Python XTEA
 
     This is an XTEA-Cipher implementation in Python 3 (eXtended Tiny Encryption Algorithm).
 
-    XTEA is a very fast and small blockcipher with 8 bytes blocksize and 16 bytes Keysize (128-Bit).
+    XTEA is a small blockcipher with 8 bytes blocksize and 16 bytes Keysize (128-Bit).
     The algorithm is secure at 2014 with the recommend 64 rounds (32 cycles). The minimum for rounds is  38 (19 cycles).
     This implementation supports following modes of operation:
     ECB, OFB
