@@ -1,4 +1,6 @@
+===========
 Python XTEA
+===========
 
     This is an XTEA-Cipher implementation in Python 3 (eXtended Tiny Encryption Algorithm).
 
@@ -20,6 +22,7 @@ Example:
     True
     
 Note
+====
    
     I does NOT guarantee that this implementation is secure. If there are bugs, tell me them. 
     The old version for Python 2 still will be updated.
