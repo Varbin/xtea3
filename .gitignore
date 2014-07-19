@@ -19,5 +19,5 @@ jython.jar
 make.bat
 Makefile
 sphinx-build.exe
-sphinx.build.exe.manifest
+sphinx-build.exe.manifest
 sphinx-build-script.py
