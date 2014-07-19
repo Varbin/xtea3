@@ -6,6 +6,7 @@ __pycache__/
 # Build
 dist/
 build/
+source/
 egg/
 *.egg
 *.egg-info/
@@ -13,3 +14,10 @@ egg/
 #Minimal Jython install for uploading and testing
 jython.bat
 jython.jar
+
+#Sphinx autodoc
+make.bat
+Makefile
+sphinx-build.exe
+sphinx.build.exe.manifest
+sphinx-build-script.py

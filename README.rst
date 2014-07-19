@@ -25,5 +25,5 @@ Note
 ====
    
     I does NOT guarantee that this implementation is secure. If there are bugs, tell me them. 
-    The old version for Python 2 still will be updated.
+    The old version for Python 2 will still be updated.
     My GPG/PGP key: 0CB97138 (full fingerprint: 8F93 4984 3BA7 4A1C E5F2  A1BA 1338 DFDE 0CB9 7138)
