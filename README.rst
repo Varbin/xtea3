@@ -2,13 +2,6 @@
 Python XTEA
 ===========
 
-.. image:: https://pypip.in/download/xtea/badge.png
-    :target: https://pypi.python.org/pypi/xtea3/
-.. image:: https://pypip.in/version/xtea3/badge.png
-    :target: https://pypi.python.org/pypi/xtea3/
-.. image:: https://pypip.in/license/xtea3/badge.png
-    :target: https://pypi.python.org/pypi/xtea3/
-
     This is an XTEA-Cipher implementation in Python 3 (eXtended Tiny Encryption Algorithm).
 
     XTEA is a small blockcipher with 8 bytes blocksize and 16 bytes Keysize (128-Bit).
