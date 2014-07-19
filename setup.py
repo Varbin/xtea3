@@ -20,6 +20,7 @@ setup(
     bugtrack_url="https://github.com/Varbin/xtea/issues",
     keywords = "xtea tea encryption crypt python3 pypy3", 
     py_modules=['xtea3'],
+    zip_safe=True,
     classifiers=[
         "Development Status :: 4 - Beta",
         "License :: Public Domain",
