@@ -7,8 +7,9 @@ Version 0.3.0; Jul 18, 2014
 [0.3.0] Fixed CBCMAC
 
  - Fixed CBCMAC implementation
+ - Added documentation
 
-
+ 
 Version 0.2.0; Jul 18, 2014
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -17,7 +18,7 @@ Version 0.2.0; Jul 18, 2014
  - Added CBC, CFB, CTR and CBCMAC
  - Raises a NonImplementedError on other modes (PGP, unofficial CCM and others)
 
-
+ 
 Version 0.1.1; Long ago...
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -26,6 +27,7 @@ Version 0.1.1; Long ago...
  - Module raises a NotImplementedError on CFB
  - Minor changes
 
+ 
 Version 0.1; Jun 22, 2014
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
