@@ -8,17 +8,19 @@ ECB, CBC, CFB OFB, CTR
 
 It also supports CBC-MAC
 
+
 Example:
 
->>> from xtea import *
->>> key = b" "*16  # Never use this
->>> text = b"This is a text. "*8
->>> x = new(key, mode=MODE_OFB, IV="12345678")
->>> c = x.encrypt(text)
->>> c
-b'\x8e.\xa5B\xb8gk\xbc'
->>> text == x.decrypt(c)
-True
+    >>> from xtea import *
+    >>> key = b" "*16  # Never use this
+    >>> text = b"This is a text. "*8
+    >>> x = new(key, mode=MODE_OFB, IV="12345678")
+    >>> c = x.encrypt(text)
+    >>> c
+    b'\x8e.\xa5B\xb8gk\xbc'
+    >>> text == x.decrypt(c)
+    True
+
 
 The module defines folowing modes of operation::
 
@@ -93,6 +95,9 @@ def new(key, **kwargs):
         
         counter (callable object): a callable counter wich returns bytes or int (needed with CTR)
         
+        .. deprecated:: 0.2
+           **Use bytes instead.**
+        
         endian (char / string): how data is beeing extracted (default "!")
 
     Raises:
@@ -128,8 +133,8 @@ class XTEACipher(object):
                 3 = CFB
                 5 = OFB
                 6 = CTR
-            IV (bytes): Initialisation vector (needed with CBC/CFB).
-            Must be 8 in length.
+
+            IV (bytes): Initialisation vector (needed with CBC/CFB). Must be 8 in length.
 
             counter (callable object): a callable counter wich returns bytes or int (needed with CTR)
       
@@ -174,7 +179,7 @@ class XTEACipher(object):
         if "endian" in keys:
             self.endian = kwargs["endian"]
             if isinstance(self.endian, bytes):
-                self.endian.decode()
+                self.endian = self.endian.decode()
         else:
             self.endian = "!"
 
@@ -241,18 +246,21 @@ class XTEACipher(object):
             
             blocks = self._block(data)
             out = []
-            for block in blocks:
-                c = self.__counter()
-                if type(c) in l:
-                    warnings.warn(
-                        "Numbers as counter-value are buggy!",
-                        DeprecationWarning)
+            c  = self.__counter()
+            if type(c) in l:
+                warnings.warn(
+                    "Numbers as counter-value are buggy!",
+                    DeprecationWarning)
+                for block in blocks:
                     n = stringToLong(block)
                     out.append(
                         _encrypt(
                             self.__key,struct.pack(self.endian+b'Q', n^c),
                             self.rounds/2, self.endian))
-                else:
+                    c = self.__counter()
+
+            else:
+                for block in blocks:
                     n = block
                     out.append(
                         _encrypt(
@@ -261,12 +269,14 @@ class XTEACipher(object):
                             self.rounds/2,
                             self.endian)
                         )
+                    c = self.__counter()
             return b"".join(out)
 
 
 
     def decrypt(self, data):
-        """Decrypt data, it must be a multiple of 8 in length.
+        """Decrypt data, it must be a multiple of 8 in length. When using the OFB-mode,
+        the function for encryption and decryption is the same.
 
         Args:
             data (bytes): The data to decrypt.
@@ -277,7 +287,6 @@ class XTEACipher(object):
         Raises:
             ValueError
 
-        On OFB, encrypt and decrypt is the same.
         """
         #ECB
         if self.mode == MODE_ECB:
@@ -330,13 +339,20 @@ class XTEACipher(object):
             l = (type(1), type(.1))
             blocks = self._block(data)
             out = []
-            for block in blocks:
-                c = self.__counter()
-                if type(c) in l:
-                    warnings.warn(
-                        "Numbers as counter-value are buggy!",
-                        DeprecationWarning)
-                    nc = struct.unpack(self.endian+b"Q",_decrypt(self.__key, block, self.rounds//2, self.endian))
+            c = self.__counter()
+            if type(c) in l:
+                warnings.warn(
+                    "Numbers as counter-value are buggy!",
+                    DeprecationWarning)
+                for block in blocks:
+                    nc = struct.unpack(
+                        self.endian+b"Q",
+                        _decrypt(
+                            self.__key,
+                            block,
+                            self.rounds//2,
+                            self.endian)
+                        )
                     try:
                         out.append(longToString(nc[0]^c))
                     except:
@@ -344,9 +360,12 @@ class XTEACipher(object):
                             "Unable to decrypt this block, block is lost",
                             RuntimeWarning)
                         out.append(b"\00"*8)
-                else:
+                    c = self.__counter()
+            else:
+                for block in blocks:
                     nc = _decrypt(self.__key, block, self.rounds//2, self.endian)
                     out.append(xor_bytes(nc, c))
+                    c = self.__counter()
             return b"".join(out)
         
 
@@ -358,9 +377,14 @@ class XTEACipher(object):
         if rest_size:
             raise ValueError()
         return l
+        
 
 class CBCMAC(object):
-    """Just a small implementation of the CBCMAC algorithm, based on XTEA.
+    """Generates a CBCMAC based on XTEA.
+    CBC-MAC is a technique for constructing a MACs from a block cipher.
+    The message is encrypted with a blockcipher, XTEA in this case, 
+    in Cipher-Block-Chaining mode with constant initialisation vector.
+    The last block is beeing returned, this is the MAC-tag for a message.
 
     Example:
     
@@ -377,6 +401,16 @@ class CBCMAC(object):
         ...
         >>> new != old
         True
+
+    NEVER do following:
+
+        >>> from xtea3 import CBCMAC
+        >>> key = b"Df/45SD41§y|&0=K"
+        >>> data = b"Lorem ipsum, dolorem set it amet!"*16
+        >>> c = CBCMAC.new(key)
+        >>> c.update(data)
+        >>> c.update(b"Random data..."*8)
+    
     """
 
     #: Canoncial name for functions like hashlib
@@ -391,11 +425,14 @@ class CBCMAC(object):
     def __init__(self, key, string=b"", endian="!"):
         warnings.warn("This is experimental!")
         self.__cipher = new(key, mode=MODE_CBC, IV=b"\00"*8, endian=endian)
-        if isinstance(self.endian, bytes):
-                self.endian.decode()
 
         #: The text to authenticated. Obviously, while updating, var "string" will added, but it is type "bytes"
-        self.text = string
+        self.text = bytes(
+            str(
+                len(
+                    string
+                    )
+                ), "utf-8")+string
         
         self.__key = key
 
@@ -418,10 +455,19 @@ class CBCMAC(object):
         return CBCMAC(key, string, endian)
 
     def update(self, string):
-        """Update the MAC object with object text to authenticate (not hash)
+        """\            
+        Update the hash object with the object string,
+        which must be interpretable as a buffer of bytes.    
+        Repeated calls are equivalent to a single call
+        with the concatenation of all the arguments.
+
+        .. warning:
+            You *should* add the first message to __init__/new function for security reasons!
 
         Args:
-            string (bytes): Text to add"""
+            string (bytes): Text to add
+
+        """
         
         self.text += string
 
@@ -429,7 +475,9 @@ class CBCMAC(object):
         """Return a copy (*clone*) of the CBCMAC object with the same key, text and endian
 
         Returns:
-            CBCMAC"""
+            CBCMAC
+
+        """
         
         return CBCMAC.new(self.__key, self.text, self.__cipher.endian)
 
@@ -439,9 +487,18 @@ class CBCMAC(object):
         in the whole range from 0 to 255.
 
         Returns:
-            bytes - the mac"""
-        
-        return self.__cipher.encrypt(self.text)[-8:]
+            bytes - the mac
+
+        """
+        return self.__cipher.encrypt(
+            self.text +
+            b"\00"*(
+                8 - (
+                    len(
+                        self.text
+                        ) % 8)
+                )
+            )[-8:]
 
     def hexdigest(self):
         """Like digest() except the digest is returned as a string object
@@ -450,7 +507,9 @@ class CBCMAC(object):
         non-binary environments.
 
         Returns:
-            string - the mac"""
+            string - the mac
+
+        """
         
         return binascii.hexlify(self.digest()).decode()
 
@@ -477,11 +536,11 @@ class Counter:
     """
     
     def __init__(self, nonce):
-        """Constructor suitable for CTR mode.
+        """Constructor for a counter which is suitable for CTR mode.
 
         Args:
-            nonce (bytes): The start value,\
-            it MUST be random if it should be secure, use *os.urandom* for it.
+            nonce (bytes): The start value, \
+            it MUST be random if it should be secure, for example, use *os.urandom* for it.
 
         """
         self.__nonce = nonce
@@ -505,6 +564,7 @@ class Counter:
         """Reset the counter to the nonce
         """
         self.__current = array.array("B", self.__nonce)
+
 ################ Util functions: basic encrypt/decrypt, OFB
 """
 This are utilities only, use them only if you know what you do.
@@ -595,8 +655,8 @@ def longToString(n):
 ################ Test function
 
 
-def test(n=250):
-    """A test function, it justs tests for bugless and symetric encryption/decryption.
+def test(n=100):
+    """A test function, it justs tests for bugfree and symetric encryption/decryption.
 
     The results will be printed out.
     The encryption/decryption will run *n* times.

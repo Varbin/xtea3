@@ -10,14 +10,14 @@ long_text = gf("README.rst")+"\n"*4+gf("changelog.rst")
 
 setup(
     name='xtea3',
-    version='0.2',
+    version='0.3',
     description="A python 3 version of XTEA",
     long_description = long_text,
     author="Simon Biewald",
     author_email="simon.biewald@hotmail.de",
     url="https://github.com/varbin/xtea3",
-    download_url="https://github.com/Varbin/xtea",
-    bugtrack_url="https://github.com/Varbin/xtea/issues",
+    download_url="https://github.com/Varbin/xtea3",
+    bugtrack_url="https://github.com/Varbin/xtea3/issues",
     keywords = "xtea tea encryption crypt python3 pypy3", 
     py_modules=['xtea3'],
     zip_safe=True,

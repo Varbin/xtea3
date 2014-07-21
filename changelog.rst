@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+Version 0.3.0; Jul 18, 2014
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[0.3.0] Fixed CBCMAC
+
+ - Fixed CBCMAC implementation
+
+
 Version 0.2.0; Jul 18, 2014
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
