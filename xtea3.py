@@ -76,7 +76,8 @@ key_size = 128
 
 
 def new(key, **kwargs):
-    """Create an cipher object.
+    """Create an "XTEACipher" object.
+    It fully PEP-272 comliant, default mode is ECB.
 
     Args:
         key (bytes): The key for encrytion/decryption. Must be 16 in length
@@ -95,10 +96,12 @@ def new(key, **kwargs):
         
         counter (callable object): a callable counter wich returns bytes or int (needed with CTR)
         
-        .. deprecated:: 0.2
-           **Use bytes instead.**
+            .. deprecated:: 0.2
+               **Use bytes only.**
         
         endian (char / string): how data is beeing extracted (default "!")
+
+        rounds (int / float): How many rounds are going to be used, one round are two cycles, there are no *half* cycles. The minimum rounds are 37 (default 64)
 
     Raises:
         ValueError if invalid/not all data is give,
@@ -165,7 +168,7 @@ class XTEACipher(object):
             if len(self.__IV) != self.block_size/8:
                 raise ValueError("IV must be 8 bytes long")
         elif self.mode == MODE_OFB:
-            self.IV = b'\00\00\00\00\00\00\00\00'
+            self.__IV = b'\00\00\00\00\00\00\00\00'
 
         if "counter" in keys:
             self.__counter = kwargs["counter"]
@@ -224,7 +227,7 @@ class XTEACipher(object):
                 
         #OFB
         elif self.mode == MODE_OFB:
-            return _crypt_ofb(self.__key, data, self.IV, self.rounds/2)
+            return _crypt_ofb(self.__key, data, self.__IV, self.rounds/2)
 
         #CFB
         elif self.mode == MODE_CFB:
@@ -318,7 +321,7 @@ class XTEACipher(object):
             
         #OFB
         elif self.mode == MODE_OFB:
-            return _crypt_ofb(self.__key, data, self.IV, self.rounds/2)
+            return _crypt_ofb(self.__key, data, self.__IV, self.rounds/2)
 
         #CFB
         elif self.mode == MODE_CFB:
@@ -668,7 +671,7 @@ def test(n=100):
 
     Example::
 
-        >>>> test(250)
+        >>> test(250)
         Starting test...
         ...
         
@@ -752,9 +755,27 @@ def test(n=100):
             raise Exception("CFB failed...")
     end = clock()
     time_cfb = end - start
+
+    print ("Testing OFB")
+    fails_ofb = 0
+    start = clock()
+    for i in range(n):
+        try:
+            key = os.urandom(16)
+            iv = os.urandom(8)
+            c1 = new(key, mode=MODE_OFB, IV=iv)
+            c2 = new(key, mode=MODE_OFB, IV=iv)
+            plain = os.urandom(56)*8
+            encrypted = c1.encrypt(plain)
+            decrypted = c2.decrypt(encrypted)
+            if decrypted != plain: fails_ofb+=1
+            
+        except:
+            raise Exception("CFB failed...")
+    end = clock()
+    time_ofb = end - start
             
     print ("Testing OFB (function)")
-    fails_ofb = 0
     start = clock()
     for i in range(n):
         try:
@@ -767,7 +788,7 @@ def test(n=100):
         except:
             raise Exception("OFB failed...")
     end = clock()
-    time_ofb = end - start
+    time_ofb += end - start
     
     print ("Testing CTR")
     fails_ctr = 0

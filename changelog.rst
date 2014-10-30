@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+Version 0.3.1; Oct 30, 2014
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[0.3.1] Fixed #1: TypeError on windows 7 and python 3.4
+
 Version 0.3.0; Jul 18, 2014
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
