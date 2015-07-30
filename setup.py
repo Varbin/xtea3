@@ -3,14 +3,17 @@ try:
 except ImportError:
     from distutils.core import setup
 
-
-gf = lambda x: open(x).read()
+def gf(x):
+    try:
+        return open(x).read()
+    except:
+        return ''
 
 long_text = gf("README.rst")+"\n"*4+gf("changelog.rst")
 
 setup(
     name='xtea3',
-    version='0.3.1',
+    version='0.3.2',
     description="A python 3 version of XTEA",
     long_description = long_text,
     author="Simon Biewald",
