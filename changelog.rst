@@ -7,6 +7,8 @@ Version 1.0.0; May 16, 2018
  - xtea3 is now a wrapper around `xtea>=0.6`
  - Removal of CBCMAC (security reasons)
  - For more changes, see changelog of xtea_.
+ - Removal of test(), a better self test will be implemented.
+ - Removal of the nonstandard `support`constant.
 
 .. _xtea: https://pypi.org/project/xtea
 
