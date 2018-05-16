@@ -21,3 +21,6 @@ Makefile
 sphinx-build.exe
 sphinx-build.exe.manifest
 sphinx-build-script.py
+
+# PyCharm
+.idea/
