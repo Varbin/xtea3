@@ -5,7 +5,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
-SHORT_TEXT = "A python 3 version of XTEA"
+SHORT_TEXT = "Obsolete Python 3 implementation of XTEA."
 
 
 def safe_long_description(fn, fallback=SHORT_TEXT):
@@ -18,9 +18,7 @@ def safe_long_description(fn, fallback=SHORT_TEXT):
 
 
 LONG_TEXT = (
-        safe_long_description("README.rst") +
-        "\n"*4 +
-        safe_long_description("changelog.rst")
+    safe_long_description("README.rst")
 )
 
 
@@ -28,15 +26,15 @@ setup(
     name='xtea3',
     version='1.0.0',
     description=SHORT_TEXT,
-    long_description = LONG_TEXT,
+    long_description=LONG_TEXT,
     author="Simon Biewald",
-    author_email="simon.biewald@hotmail.de",
+    author_email="simon@fam-biewald.de",
     url="https://github.com/varbin/xtea3",
-    keywords = "xtea tea encryption crypt python3 pypy3", 
+    keywords="xtea tea encryption cryptography python3",
     py_modules=['xtea3'],
     zip_safe=True,
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 7 - Inactive",
         "License :: Public Domain",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
@@ -46,8 +44,8 @@ setup(
     platform="Any",
     project_urls={
         'Source': 'https://github.com/Varbin/xtea3',
-        'Say Thanks!': 'https://saythanks.io/to/Varbin',
         'Tracker': 'https://github.com/Varbin/xtea3/issues'
     },
-    install_requires=["xtea>=0.6.0"],  # Dev version
+    install_requires=["xtea>=0.7.1"],
+    python_requires='>=3'
 )

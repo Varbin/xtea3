@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-Version 1.0.0; May 16, 2018
+Version 1.0.0; Jun 17, 2019
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  - xtea3 is now a wrapper around `xtea>=0.6`

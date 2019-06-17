@@ -11,14 +11,3 @@ which will be automatically installed with this updated version.
 
 
 .. _xtea: https://pypi.org/project/xtea
-
-
-Note
-====
-   
-    I am not liable for security or anything.
-    If you find bugs, please tell me.
-
-    My GPG/PGP key: 0CB97138_ (full fingerprint: 8F93 4984 3BA7 4A1C E5F2  A1BA 1338 DFDE 0CB9 7138)
-
-.. _0CB97138: https://sbiewald.de/pubkey.txt
