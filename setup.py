@@ -27,6 +27,7 @@ setup(
     version='1.0.0',
     description=SHORT_TEXT,
     long_description=LONG_TEXT,
+    long_description_content_type="text/x-rst",
     author="Simon Biewald",
     author_email="simon@fam-biewald.de",
     url="https://github.com/varbin/xtea3",
@@ -39,7 +40,9 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
         "Topic :: Security",
-        "Topic :: Security :: Cryptography"],
+        "Topic :: Security :: Cryptography",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Education"],
     license="Public Domain",
     platform="Any",
     project_urls={
